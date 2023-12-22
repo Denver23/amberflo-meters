@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IMainMetersProps } from "./props";
 import { BreadCrumbsBlock } from "../../styles";
 import { MeterTypeEnum } from "../../utils/types";
-import { getErrorMessage } from "../../utils/helpers";
+import { getErrorMessage, sorter } from "../../utils/helpers";
 
 export const MainMetersScreen: FC<IMainMetersProps> = ({
   metersQuery: { isLoading: isMetersLoading },
@@ -19,10 +19,7 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
   const nameSearchProps = useColumnSearchProps("display_name");
   const apiNameSearchProps = useColumnSearchProps("api_name");
   const [isOperationsMeterLoading, setLoading] = useState<boolean>(false);
-  const isLoading = useMemo<boolean>(
-    () => isOperationsMeterLoading || isMetersLoading,
-    [isMetersLoading, isOperationsMeterLoading],
-  );
+  const isLoading = isOperationsMeterLoading || isMetersLoading;
 
   const deleteButtonHandler = useCallback(
     async (event: any, meterId: string) => {
@@ -47,8 +44,7 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
         dataIndex: "display_name",
         key: "display_name",
         width: "20%",
-        sorter: (a: AnyObject, b: AnyObject) =>
-          a.display_name > b.display_name ? -1 : 1,
+        sorter: sorter("display_name"),
         ...nameSearchProps,
       },
       {
@@ -56,8 +52,7 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
         dataIndex: "api_name",
         key: "api_name",
         width: "20%",
-        sorter: (a: AnyObject, b: AnyObject) =>
-          a.api_name > b.api_name ? -1 : 1,
+        sorter: sorter("api_name"),
         ...apiNameSearchProps,
       },
       {
@@ -74,11 +69,11 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
             value: "false",
           },
         ],
-        filterMode: "menu" as "menu",
+        filterMode: "menu" as const,
         filterSearch: true,
         onFilter: (value: any, record: AnyObject) =>
           record.active.toString() === value,
-        sorter: (a: AnyObject, b: AnyObject) => a.active - b.active,
+        sorter: sorter("active"),
         render: (value: boolean) => (
           <Tag color={value ? "green" : "red"}>{value.toString()}</Tag>
         ),
@@ -98,10 +93,9 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
             value: "false",
           },
         ],
-        filterMode: "menu" as "menu",
+        filterMode: "menu" as const,
         filterSearch: true,
-        sorter: (a: AnyObject, b: AnyObject) =>
-          a.used_for_billing - b.used_for_billing,
+        sorter: sorter("used_for_billing"),
         onFilter: (value: any, record: AnyObject) =>
           record.used_for_billing.toString() === value,
         render: (value: boolean) => (
@@ -117,9 +111,9 @@ export const MainMetersScreen: FC<IMainMetersProps> = ({
           text: meterType,
           value: meterType,
         })),
-        filterMode: "menu" as "menu",
+        filterMode: "menu" as const,
         filterSearch: true,
-        sorter: (a: AnyObject, b: AnyObject) => (a.type > b.type ? -1 : 1),
+        sorter: sorter("type"),
         onFilter: (value: any, record: AnyObject) => record.type === value,
       },
       {

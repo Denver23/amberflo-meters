@@ -17,9 +17,9 @@ import { isEqual } from "lodash";
 const initMeterFormValues: IMeterForm = {
   display_name: "",
   api_name: "",
-  active: "true",
+  active: 1,
   type: MeterTypeEnum.Sum,
-  used_for_billing: "true",
+  used_for_billing: 1,
 };
 
 export const MetersTableFooter: FC<IMetersTableFooterProps> = ({
@@ -56,8 +56,8 @@ export const MetersTableFooter: FC<IMetersTableFooterProps> = ({
       try {
         setLoading(true);
         const { data } = await metersAPI.createNewMeter({
-          active: active === "true" ? true : false,
-          used_for_billing: used_for_billing === "true" ? true : false,
+          active: Boolean(active),
+          used_for_billing: Boolean(used_for_billing),
           display_name,
           api_name,
           type,
@@ -100,16 +100,16 @@ export const MetersTableFooter: FC<IMetersTableFooterProps> = ({
           value={active}
           onChange={handleSelectChange("active")}
           options={[
-            { value: "true", label: "True" },
-            { value: "false", label: "False" },
+            { value: 1, label: "True" },
+            { value: 0, label: "False" },
           ]}
         />
         <CreateMeterSelect
           value={used_for_billing}
           onChange={handleSelectChange("used_for_billing")}
           options={[
-            { value: "true", label: "True" },
-            { value: "false", label: "False" },
+            { value: 1, label: "True" },
+            { value: 0, label: "False" },
           ]}
         />
         <CreateMeterSelect

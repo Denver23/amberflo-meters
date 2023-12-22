@@ -18,9 +18,9 @@ export interface IMeter {
 export interface IMeterForm {
   display_name: string;
   api_name: string;
-  active: string;
+  active: number;
   type: MeterTypeEnum;
-  used_for_billing: string;
+  used_for_billing: number;
 }
 
 export interface IMeterRequest {

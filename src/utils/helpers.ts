@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { IMeter, IMeterForm, MeterTypeEnum } from "./types";
+import {AnyObject} from "antd/es/_util/type";
 
 export function getErrorMessage(error: unknown) {
   if (error instanceof AxiosError)
@@ -11,10 +12,14 @@ export function getErrorMessage(error: unknown) {
 export function convertMeterToFormValues(meter: IMeter | undefined): IMeterForm {
   const { active, api_name, type, used_for_billing, display_name } = meter ?? {};
   return {
-    active: active ? active.toString() : "true",
+    active: Number(active),
     api_name: api_name ?? "",
     type: type ?? MeterTypeEnum.Sum,
-    used_for_billing: used_for_billing ? used_for_billing.toString() : "true",
+    used_for_billing: Number(used_for_billing),
     display_name: display_name ?? "",
   };
+}
+
+export function sorter(key: string) {
+  return (a: AnyObject, b: AnyObject) => a[key] > b[key] ? -1 : 1;
 }
